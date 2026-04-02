@@ -992,8 +992,15 @@ func extractDirectPathFromURL(url string) string {
 
 // Start a REST API server to expose the WhatsApp client functionality
 func startRESTServer(client *whatsmeow.Client, messageStore *MessageStore, port int) {
+	// Optional path prefix for lightweight security-through-obscurity.
+	// Set API_SECRET env var to require e.g. /mysecret/api/send instead of /api/send.
+	prefix := ""
+	if secret := os.Getenv("API_SECRET"); secret != "" {
+		prefix = "/" + secret
+	}
+
 	// Handler for sending messages
-	http.HandleFunc("/api/send", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc(prefix+"/api/send", func(w http.ResponseWriter, r *http.Request) {
 		// Only allow POST requests
 		if r.Method != http.MethodPost {
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
@@ -1039,7 +1046,7 @@ func startRESTServer(client *whatsmeow.Client, messageStore *MessageStore, port 
 	})
 
 	// Handler for downloading media
-	http.HandleFunc("/api/download", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc(prefix+"/api/download", func(w http.ResponseWriter, r *http.Request) {
 		// Only allow POST requests
 		if r.Method != http.MethodPost {
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
@@ -1091,7 +1098,7 @@ func startRESTServer(client *whatsmeow.Client, messageStore *MessageStore, port 
 	})
 
 	// Handler for archiving/unarchiving chats
-	http.HandleFunc("/api/archive", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc(prefix+"/api/archive", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 			return
@@ -1168,7 +1175,7 @@ func startRESTServer(client *whatsmeow.Client, messageStore *MessageStore, port 
 	})
 
 	// Handler for marking chats as read
-	http.HandleFunc("/api/mark-read", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc(prefix+"/api/mark-read", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 			return
