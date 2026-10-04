@@ -451,7 +451,7 @@ def search_contacts(query: str) -> List[Contact]:
             WHERE 
                 (LOWER(name) LIKE LOWER(?) OR LOWER(jid) LIKE LOWER(?))
                 AND jid NOT LIKE '%@g.us'
-            ORDER BY name, jid
+            ORDER BY last_message_time DESC, name
             LIMIT 50
         """, (search_pattern, search_pattern))
         
