@@ -1272,7 +1272,7 @@ func startRESTServer(client *whatsmeow.Client, messageStore *MessageStore, port 
 	// Query params:
 	//   ?collection=regular_low (default) — which app state to recover
 	//   ?strategy=server (default) | phone | both
-	http.HandleFunc("/api/test-recovery", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc(prefix+"/api/test-recovery", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 			return
@@ -1412,7 +1412,7 @@ func startRESTServer(client *whatsmeow.Client, messageStore *MessageStore, port 
 	// Nuclear option: sends APP_STATE_FATAL_EXCEPTION_NOTIFICATION to the phone,
 	// which resets the app state collections on the server. ALL linked devices will
 	// be logged out. After this, delete DBs, restart, and re-scan QR.
-	http.HandleFunc("/api/nuke-appstate", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc(prefix+"/api/nuke-appstate", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 			return

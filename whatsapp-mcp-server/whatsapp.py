@@ -14,7 +14,9 @@ _BRIDGE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'wh
 load_dotenv(os.path.join(_BRIDGE_DIR, '.env'))
 
 MESSAGES_DB_PATH = os.path.join(_BRIDGE_DIR, 'store', 'messages.db')
-WHATSAPP_API_BASE_URL = "http://localhost:8080/api"
+# Optional API_SECRET path prefix, must match the Go bridge (see startRESTServer)
+_API_SECRET = os.environ.get("API_SECRET", "")
+WHATSAPP_API_BASE_URL = f"http://localhost:8080/{_API_SECRET}/api" if _API_SECRET else "http://localhost:8080/api"
 N8N_TRANSCRIPTION_URL = os.environ.get("N8N_TRANSCRIPTION_URL", "")
 N8N_BEARER_TOKEN = os.environ.get("N8N_BEARER_TOKEN", "")
 
